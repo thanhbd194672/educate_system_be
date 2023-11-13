@@ -1,0 +1,9 @@
+vendor
+tests
+GR2
+_docker
+_store
+.env
+docker-compose.yml
+Dockerfile-nginx
+Dockerfile-php
