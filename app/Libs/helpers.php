@@ -5,7 +5,7 @@ use App\Consts\DbTypes;
 use App\Libs\Encrypt\EDData;
 use App\Libs\IDs\C_ULID;
 use App\Libs\Setting\Setting;
-use App\Models\V1\Image\ResImage;
+use App\Models\V2\Image\ResImage;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
@@ -757,11 +757,11 @@ function ResMetaJson(mixed $data): ?array
     if ($data instanceof LengthAwarePaginator) {
 
         return [
-            'per_page'     => $data->perPage(),
-            'total_count'  => $data->total(),
-            'page_count'   => $data->lastPage(),
-            'current_page' => $data->currentPage(),
-            'next_page'    => ($data->lastPage() > $data->currentPage()) ? ($data->currentPage() + 1) : null
+            'perPage'     => $data->perPage(),
+            'totalCount'  => $data->total(),
+            'pageCount'   => $data->lastPage(),
+            'currentPage' => $data->currentPage(),
+            'nextPage'    => ($data->lastPage() > $data->currentPage()) ? ($data->currentPage() + 1) : null
         ];
     } else {
 

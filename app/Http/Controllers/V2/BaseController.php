@@ -10,10 +10,10 @@ class BaseController extends Controller
 {
     public ?User $user;
 
-    public  function getCurrentUser(Request $request) :User|null
+    public  function getCurrentUser(Request $request) :User
     {
         $this->user = $request->user();
-        /**@var User|null  */
+
         return $this->user;
     }
 }

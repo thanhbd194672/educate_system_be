@@ -17,7 +17,7 @@ class UserController extends BaseController
         if ($this->getCurrentUser($request)) {
             $user_struct = $this->user->struct();
         } else {
-            resJson([
+            return resJson([
                 'error' => [
                     'account' => trans('v2/auth.error_username_not_exist')
                 ]
@@ -28,9 +28,11 @@ class UserController extends BaseController
                 Struct::OPT_IGNORE => [
                     'status',
                     'password'
+                ],
+                Struct::OPT_CHANGE => [
+                    'role' => ['processRole']
                 ]
             ])
         ]);
-
     }
 }

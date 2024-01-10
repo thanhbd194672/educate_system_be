@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\V1\Image;
+namespace App\Models\V2\Image;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -27,13 +27,13 @@ class UseImage
 
             if (in_array($dimension, $data['cache']) && ResImage::isFile("$dirname/{$data['id']}_$dimension.{$data['ext']}")) {
 
-                return self::_asset("$dirname/{$data['id']}_$dimension.{$data['ext']}");
+                return self::_asset("cache/$dirname/{$data['id']}_$dimension.{$data['ext']}");
             } else {
-                return ResImage::resize("$dirname/{$data['id']}.{$data['ext']}", $width, $height);
+                return ResImage::resize("cache/$dirname/{$data['id']}.{$data['ext']}", $width, $height);
             }
         }
 
-        return self::_asset("$dirname/{$data['id']}.{$data['ext']}");
+        return self::_asset("cache/$dirname/{$data['id']}.{$data['ext']}");
     }
 
     public static function getAssets(array|string $data): ?array

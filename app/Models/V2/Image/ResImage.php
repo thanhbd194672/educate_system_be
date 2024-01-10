@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\V1\Image;
+namespace App\Models\V2\Image;
 
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Constraint;

@@ -6,16 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    protected $connection = 'pgsql_main';
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('main.password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
+        Schema::create('main.topic', function (Blueprint $table) {
+            $table->string("id");
+            $table->string("name");
+            $table->text("description")->nullable();
+            $table->integer("is_free");
+            $table->string("id_course");
+            $table->timestamps();
         });
     }
 
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('main.password_reset_tokens');
+        Schema::dropIfExists('main.topic');
     }
 };
