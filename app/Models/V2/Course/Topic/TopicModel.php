@@ -39,7 +39,6 @@ class TopicModel extends Model
     {
         return self::query()->insert($data);
     }
-
     public function struct() :TopicStruct
     {
         return new TopicStruct($this->getAttributes());

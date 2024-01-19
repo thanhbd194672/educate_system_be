@@ -820,3 +820,37 @@ function doImage($image_file, $width, $height): ?array
         'cache' => $cache,
     ];
 }
+
+function doVideo($image_file): ?array
+{
+    $ulid      = C_ULID::generate();
+    $now       = $ulid->getDateTime();
+    $directory = cdn_sc_path_files($now->format('Y/m/d'));
+
+//    $is_dir = true;
+//    if (!cdn_sc_check()) {
+//        $is_dir = false;
+//    } elseif (!File::exists($directory)) {
+//        $is_dir = File::makeDirectory($directory, recursive: true);
+//    }
+//
+//    if (!$is_dir) {
+//        return null;
+//    }
+
+
+    $file      = $image_file;
+    $filename  = $file->getClientOriginalName();
+    $mime      = $file->getMimeType();
+    $extension = $file->getClientOriginalExtension();
+    $iid       = $ulid->toString();
+    $file->move($directory, "$iid.$extension");
+
+    return [
+        'id'    => $iid,
+        'name'  => $filename,
+        'mime'  => $mime,
+        'ext'   => $extension,
+        'time'  => $now->format(DateFormat::TIMESTAMP_DB),
+    ];
+}

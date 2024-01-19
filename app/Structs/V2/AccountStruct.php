@@ -4,6 +4,7 @@ namespace App\Structs\V2;
 
 use App\Consts\RoleAccount;
 use App\Libs\Serializer\Normalize;
+use App\Models\V2\Image\UseImage;
 use App\Structs\Struct;
 use Illuminate\Support\Carbon;
 
@@ -57,5 +58,13 @@ class AccountStruct extends Struct
         } else {
             return "teacher";
         }
+    }
+    public function getImage(): ?string
+    {
+        $image = null;
+        if ($this->avatar) {
+            $image = UseImage::getAsset(json_encode($this->avatar), 960, 540);
+        }
+        return $image;
     }
 }

@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -89,5 +91,24 @@ class User extends Authenticatable
             })
             ->distinct()
             ->first($filter);
+    }
+    public static function doGetTeacher(array $filter) : LengthAwarePaginator|Collection
+    {
+        $query = self::query()
+            ->orderBy($filter['sort_by'] ?? 'created_at',$filter['sort'] ?? 'desc')
+            ->where(function ($query) use ($filter){
+                if($filter['search_by']){
+                    $query->where($filter['search_by'] , 'LIKE',$filter['key']);
+                }
+                $query->where('role', 2);
+//                $query->whereNot('status',0);
+            });
+        if (empty($filter['limit'])) {
+
+            return $query->get($filter['fields']);
+        } else {
+
+            return $query->paginate($filter['limit'], $filter['fields'], "{$filter['page']}", $filter['page']);
+        }
     }
 }

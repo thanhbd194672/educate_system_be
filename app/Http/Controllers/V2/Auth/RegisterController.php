@@ -45,8 +45,8 @@ class RegisterController extends BaseController
                 'error' => firstError($validator->getMessageBag()->toArray())
             ];
         } else {
-            if ($request->file('image')) {
-                $avatar = doImage($request->file('image'), 960, 540);
+            if ($request->file('avatar')) {
+                $avatar = doImage($request->file('avatar'), 960, 540);
             }
             $data = [
                 'id'             => generateUlid(),
@@ -59,7 +59,7 @@ class RegisterController extends BaseController
                 'tel_number'     => $request->input('tel_number') ?? null,
                 'social_network' => $request->input('social_network') ?? null,
                 'role'           => $request->input('role') == 'student' ? RoleAccount::STUDENT : RoleAccount::TEACHER,
-                'image'          => $avatar ?? null,
+                'avatar'         => $avatar ?? null,
                 'password'       => Hash::make($request->input('password')),
                 'created_at'     => now()->format(DateFormat::TIMESTAMP_DB),
                 'status'         => 1,

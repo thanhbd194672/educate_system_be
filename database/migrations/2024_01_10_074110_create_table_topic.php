@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('main.topic', function (Blueprint $table) {
+        Schema::create('topic', function (Blueprint $table) {
             $table->string("id");
             $table->string("name");
             $table->text("description")->nullable();
             $table->integer("is_free");
             $table->string("id_course");
+            $table->integer('status');
             $table->timestamps();
         });
     }

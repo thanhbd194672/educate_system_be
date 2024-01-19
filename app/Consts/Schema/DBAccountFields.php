@@ -19,7 +19,7 @@ abstract class DBAccountFields
 			'cache' => true,
 		],
 		'avatar' => [
-			'type' => DbTypes::STRING,
+			'type' => DbTypes::JSON,
 			'cache' => true,
 		],
 		'role' => [

@@ -4,10 +4,14 @@ namespace App\Http\Controllers\V2\Course\Topic;
 
 use App\Consts\DateFormat;
 use App\Consts\Schema\DBTopicFields;
+use App\Consts\Schema\DBVideoFields;
 use App\Http\Controllers\V2\BaseController;
 use App\Libs\IDs\C_ULID;
 use App\Libs\QueryFields;
+use App\Models\V2\Course\Topic\Doc\DocModel;
+use App\Models\V2\Course\Topic\Exam\ExamModel;
 use App\Models\V2\Course\Topic\TopicModel;
+use App\Models\V2\Course\Topic\Video\VideoModel;
 use App\Models\V2\User;
 use App\Structs\Struct;
 use App\Structs\V2\TopicStruct;
@@ -84,12 +88,12 @@ class TopicController extends BaseController
                 'error' => firstError($validator->getMessageBag()->toArray())
             ];
         } else {
-            $fields_diary = new QueryFields($request, DBTopicFields::TOPIC);
+            $fields_topic = new QueryFields($request, DBTopicFields::TOPIC);
             $user_access = self::getCurrentUser($request)->struct();
-//            $required_access_permission = DiaryPermissionType::ACCESS_INFO;
+//            $required_access_permission = topicPermissionType::ACCESS_INFO;
 
             $filter_data = [
-                'fields'    => $fields_diary->select,
+                'fields'    => $fields_topic->select,
                 ...pageLimit($request),
                 'user_id'   => $user_access->id,
                 'sort_by'   => $request->input('sort_by') ?? null,
@@ -100,10 +104,10 @@ class TopicController extends BaseController
             ];
 
             if ($query = TopicModel::doGetTopic($filter_data)) {
-                foreach ($query as $diary) {
-                    $diary_struct = $diary->struct();
-//                    if (DiaryPermissionModel::checkPermission($diary_struct, $user_access->id, $required_access_permission)) {
-                    $data[] = $diary_struct->toArray([
+                foreach ($query as $topic) {
+                    $topic_struct = $topic->struct();
+//                    if (topicPermissionModel::checkPermission($topic_struct, $user_access->id, $required_access_permission)) {
+                    $data[] = $topic_struct->toArray([
                         Struct::OPT_CHANGE => [
                             'image' => ['getImage']  // process image by function inside struct
                         ],
@@ -119,6 +123,85 @@ class TopicController extends BaseController
         return resJson($json);
     }
 
+    public function getDetailInTopic(Request $request , string $id_topic):JsonResponse{
+        $rule = [
+            ''
+        ];
+        $message = [
+
+        ];
+        $validator = $this->_validate($request, $rule, $message);
+        if ($validator->errors()->count()) {
+            $json = [
+                'error' => firstError($validator->getMessageBag()->toArray())
+            ];
+        } else {
+            $user_access = self::getCurrentUser($request)->struct();
+//            $required_access_permission = topicPermissionType::ACCESS_INFO;
+
+            $filter_data = [
+                'fields'    => ["name","id_topic","id"],
+                ...pageLimit($request),
+                'user_id'   => $user_access->id,
+                'sort_by'   => $request->input('sort_by') ?? null,
+                'sort'      => $request->input('sort') ?? 'asc',
+                'search_by' => $request->input('search_by') ?? null,
+                'key'       => "%{$request->input('key')}%" ?? '%%',
+                'id_topic' => $id_topic,
+            ];
+
+
+            if ($query = VideoModel::doGetVideo($filter_data)) {
+                foreach ($query as $video) {
+                    $video_struct = $video->struct();
+//                    if (topicPermissionModel::checkPermission($topic_struct, $user_access->id, $required_access_permission)) {
+                    $data[] = $video_struct->toArray([
+                        Struct::OPT_CHANGE => [
+                            'image' => ['getImage']  // process image by function inside struct
+                        ],
+                        Struct::OPT_EXTRA => [
+                            'type' => 'Video'
+                        ]
+                    ]);
+                }
+            }
+
+            if ($query = DocModel::doGetDoc($filter_data)) {
+                foreach ($query as $doc) {
+                    $doc_struct = $doc->struct();
+//                    if (topicPermissionModel::checkPermission($topic_struct, $user_access->id, $required_access_permission)) {
+                    $data[] = $doc_struct->toArray([
+                        Struct::OPT_CHANGE => [
+                            'image' => ['getImage']  // process image by function inside struct
+                        ],
+                        Struct::OPT_EXTRA => [
+                            'type' => 'Tài liệu'
+                        ]
+                    ]);
+                }
+            }
+
+            if ($query = ExamModel::doGetExam($filter_data)) {
+                foreach ($query as $exam) {
+                    $exam_struct = $exam->struct();
+//                    if (topicPermissionModel::checkPermission($topic_struct, $user_access->id, $required_access_permission)) {
+                    $data[] = $exam_struct->toArray([
+                        Struct::OPT_CHANGE => [
+                            'image' => ['getImage']  // process image by function inside struct
+                        ],
+                        Struct::OPT_EXTRA => [
+                            'type' => 'Bài kiểm tra'
+                        ]
+                    ]);
+                }
+            }
+            $json = [
+                'items' => $data ?? [''],
+                'meta'  => ResMetaJson($query),
+            ];
+        }
+        return resJson($json);
+    }
 
     protected function _validate(Request $request, ?array $rule = [], ?array $message = []): \Illuminate\Contracts\Validation\Validator|\Illuminate\Validation\Validator
     {

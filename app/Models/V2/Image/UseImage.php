@@ -65,4 +65,30 @@ class UseImage
     {
         return cdn_sc_asset($uri);
     }
+
+    public static function getAssetVideo(array|string $data, ?int $width = null, ?int $height = null): ?string
+    {
+
+        if (is_string($data) && Str::isJson($data)) {
+            if (!$data = json_decode($data, true)) {
+                return null;
+            }
+        }
+
+
+        $dirname = Carbon::parse($data['time'])->format('Y/m/d');
+
+        if ($width || $height) {
+            $dimension = "{$width}x$height";
+
+            if (in_array($dimension, $data['cache']) && ResImage::isFile("$dirname/{$data['id']}_$dimension.{$data['ext']}")) {
+
+                return self::_asset("cache/$dirname/{$data['id']}_$dimension.{$data['ext']}");
+            } else {
+                return ResImage::resize("cache/$dirname/{$data['id']}.{$data['ext']}", $width, $height);
+            }
+        }
+
+        return self::_asset("cache/$dirname/{$data['id']}.{$data['ext']}");
+    }
 }
