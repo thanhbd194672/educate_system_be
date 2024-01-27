@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('course', function (Blueprint $table) {
+        Schema::create('main.course', function (Blueprint $table) {
             $table->string('id');
             $table->string('name_course');
             $table->string('description');

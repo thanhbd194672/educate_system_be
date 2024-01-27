@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string("id");
             $table->timestamps();
             $table->string("id_topic");
+            $table->string("name");
             $table->integer("is_final");
             $table->timestamp("time_to_do");
             $table->integer("status");

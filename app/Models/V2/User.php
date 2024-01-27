@@ -83,7 +83,7 @@ class User extends Authenticatable
     }
     public static function getUserByName(string $name, array $filter): Builder|Model|null
     {
-        return self::query()
+        $query =  self::query()
             ->where(function ($query) use ($name) {
                 $query
                     ->orWhere('username', $name)
@@ -91,6 +91,7 @@ class User extends Authenticatable
             })
             ->distinct()
             ->first($filter);
+        return $query;
     }
     public static function doGetTeacher(array $filter) : LengthAwarePaginator|Collection
     {

@@ -65,8 +65,7 @@ class LoginController extends BaseController
         if (!$validator->fails()) {
             $username = $request->input('username');
 
-            $user_info = User::getUserByName($username, ['*']);
-
+            $user_info = User::getUserByName($username,['*']);
             if (!$user_info) {
                 $validator->errors()->add('username', trans('v2/auth.error_username_not_exist'));
             } else {
@@ -75,6 +74,7 @@ class LoginController extends BaseController
                 } elseif (!Hash::check($request->input('password'), $user_info->getAttribute('password'))) {
                     $validator->errors()->add('password', trans('v2/auth.error_password_incorrect'));
                 }
+
                 if ($user_info instanceof User) {
                     $this->user = $user_info;
                 }
